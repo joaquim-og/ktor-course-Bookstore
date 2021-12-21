@@ -1,4 +1,4 @@
-package com.confrades.dataSources.models
+package com.confrades.dataSources.dataModels
 
 data class User(
     var id: String,

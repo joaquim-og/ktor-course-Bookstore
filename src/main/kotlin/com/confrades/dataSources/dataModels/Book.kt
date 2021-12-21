@@ -1,4 +1,4 @@
-package com.confrades.dataSources.models
+package com.confrades.dataSources.dataModels
 
 data class Book(
     var id: String,

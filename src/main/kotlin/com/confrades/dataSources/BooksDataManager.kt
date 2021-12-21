@@ -1,10 +1,13 @@
 package com.confrades.dataSources
 
-import com.confrades.dataSources.models.Book
+import com.confrades.dataSources.dataModels.Book
+import org.slf4j.LoggerFactory
+import kotlin.reflect.full.declaredMemberProperties
 
 class BooksDataManager {
 
     private var books = ArrayList<Book>()
+    private val log = LoggerFactory.getLogger(BooksDataManager::class.java)
 
     init {
         books.add(Book(getBookId(), "Xablau livro 1", "Confrades Tech", 100F))
@@ -38,10 +41,27 @@ class BooksDataManager {
         books.remove(bookToDelete)
     }
 
+    fun findBook(bookId: String?): Book? = books.find {
+        it.id == bookId
+    }
+
     private fun getBookId(): String = books.size.toString()
 
-    private fun findBook(bookId: String?): Book? = books.find {
-        it.id == bookId
+    fun sortedBooks(sortBy: String, asc: Boolean): List<Book> {
+        val member = Book::class.declaredMemberProperties.find { it.name == sortBy }
+
+        if (member == null) {
+            log.info("The param to sort doesnt exist")
+            return books
+        }
+
+        return if (asc) {
+            books.sortedBy { member.get(it).toString() }
+        } else {
+            books.sortedByDescending { member.get(it).toString() }
+        }
+
+
     }
 
 }
