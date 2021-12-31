@@ -1,0 +1,1 @@
+curl -u "shopper1:password" "localhost:8080/book/api/list?sortby=title&asc=true"

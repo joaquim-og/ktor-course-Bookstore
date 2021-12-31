@@ -7,6 +7,7 @@ import io.ktor.content.*
 import io.ktor.http.content.*
 import io.ktor.features.*
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.response.*
 import io.ktor.request.*
 
@@ -30,7 +31,13 @@ fun Application.configureRouting() {
             exception<AuthorizationException> { cause ->
                 call.respond(HttpStatusCode.Forbidden)
             }
+        }
 
+        authenticate("bookStoreAuth") {
+            get("/api/tryauth") {
+                val principal = call.principal<UserIdPrincipal>()
+                call.respondText("Hello $principal | ${principal?.name}")
+            }
         }
     }
 }

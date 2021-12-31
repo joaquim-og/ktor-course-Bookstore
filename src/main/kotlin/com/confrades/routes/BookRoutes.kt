@@ -6,13 +6,14 @@ import com.confrades.dataSources.dataModels.BookReserveResponse
 import com.confrades.dataSources.dataModels.BookResponse
 import com.confrades.dataSources.dataModels.HyperMediaLink
 import com.confrades.dataSources.locationModels.BookListLocation
+import com.confrades.dataSources.locationModels.BookListLocationWithAuth
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.routing.get
-
 
 @OptIn(KtorExperimentalLocationsAPI::class)
 fun Route.books() {
@@ -22,6 +23,11 @@ fun Route.books() {
     route("/book") {
         get<BookListLocation> {
             call.respond(booksDataManager.sortedBooks(it.sortBy, it.asc))
+        }
+        authenticate("bookStoreAuth") {
+            get<BookListLocationWithAuth> {
+                call.respond(booksDataManager.sortedBooks(it.sortBy, it.asc))
+            }
         }
     }
 
@@ -81,5 +87,4 @@ fun Route.books() {
         }
 
     }
-
 }
