@@ -7,6 +7,7 @@ import com.confrades.dataSources.dataModels.BookResponse
 import com.confrades.dataSources.dataModels.HyperMediaLink
 import com.confrades.dataSources.locationModels.BookListLocation
 import com.confrades.dataSources.locationModels.BookListLocationWithAuth
+import com.confrades.dataSources.repository.MongoClients
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.locations.*
@@ -15,6 +16,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.routing.get
 
+private val mongoDataHandler = MongoClients().getMongoClient()
 @OptIn(KtorExperimentalLocationsAPI::class)
 fun Route.books() {
 
@@ -71,7 +73,7 @@ fun Route.books() {
             )
 
             val bookResponse = BookResponse(
-                bookToGet ?: Book(id = "nopes", title = "livro 404", author = "Casper", price = 0F),
+                bookToGet ?: Book(bookId = null, title = "livro 404", author = "Casper", price = 0F),
                 hypermediaLink
             )
             call.respond(bookResponse)
