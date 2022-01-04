@@ -17,26 +17,36 @@ import io.ktor.routing.*
 import io.ktor.routing.get
 
 private val mongoDataHandler = MongoClients().getMongoClient()
+
 @OptIn(KtorExperimentalLocationsAPI::class)
 fun Route.books() {
 
     val booksDataManager = BooksDataManager()
 
-    route("/book") {
-        get<BookListLocation> {
-            call.respond(booksDataManager.sortedBooks(it.sortBy, it.asc))
-        }
-        authenticate("bookStoreAuth") {
-            get<BookListLocationWithAuth> {
-                call.respond(booksDataManager.sortedBooks(it.sortBy, it.asc))
-            }
-        }
-    }
+//    route("/book") {
+//    authenticate("bookStoreAuth") {
+//        get<BookListLocation> {
+//            call.respond(booksDataManager.sortedBooks(it.sortBy, it.asc))
+//        }
+//        get<BookListLocationWithAuth> {
+//            call.respond(booksDataManager.sortedBooks(it.sortBy, it.asc))
+//        }
+//    }
+//    }
 
     route("/books") {
 
         get("/") {
             call.respond(booksDataManager.getAllBooks())
+        }
+
+        authenticate("bookStoreAuth") {
+            get<BookListLocation> {
+                call.respond(booksDataManager.sortedBooks(it.sortBy, it.asc))
+            }
+            get<BookListLocationWithAuth> {
+                call.respond(booksDataManager.sortedBooks(it.sortBy, it.asc))
+            }
         }
 
         post("/{id}") {
